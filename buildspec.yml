@@ -10,6 +10,7 @@ containers:
                 commands:
                     - npm install
                     - aws cloudformation package --template $INPUT_FILE --s3-bucket $S3_BUCKET --output-template post-saml.yaml
+                    - cat post-saml.yaml
         artifacts:
             files:
                 - post-saml.yaml
