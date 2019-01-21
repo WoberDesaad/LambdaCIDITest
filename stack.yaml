@@ -24,9 +24,9 @@ Resources:
     Type: "AWS::ApiGateway::Method"
     Properties:
       AuthorizationType: "NONE"
-      HttpMethod: "POST"
+      HttpMethod: "GET"
       Integration:
-        IntegrationHttpMethod: "POST"
+        IntegrationHttpMethod: "GET"
         Type: "AWS_PROXY"
         Uri: !Sub
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
@@ -60,7 +60,7 @@ Resources:
       Action: "lambda:InvokeFunction"
       FunctionName: !GetAtt "testFunction.Arn"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/POST/"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/GET/"
 
   lambdaIAMRole:
     Type: "AWS::IAM::Role"
