@@ -52,6 +52,7 @@ Resources:
       Role: !GetAtt "lambdaIAMRole.Arn"
       Runtime: "python3.7"
       Timeout: 10
+      CodeUri: .
 
   lambdaApiGatewayInvoke:
     Type: "AWS::Lambda::Permission"
