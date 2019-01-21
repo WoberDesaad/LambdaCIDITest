@@ -10,7 +10,7 @@ Parameters:
   lambdaFunctionName:
     Type: "String"
     AllowedPattern: "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$"
-    Default: "my-function"
+    Default: "test-function"
 
 Resources:
   apiGateway:
@@ -29,7 +29,7 @@ Resources:
         Type: "AWS_PROXY"
         Uri: !Sub
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "lambdaFunction.Arn"
+          - lambdaArn: !GetAtt "testFunction.Arn"
       ResourceId: !GetAtt "apiGateway.RootResourceId"
       RestApiId: !Ref "apiGateway"
 
@@ -41,10 +41,10 @@ Resources:
       RestApiId: !Ref "apiGateway"
       StageName: !Ref "apiGatewayStageName"
 
-  lambdaFunction:
+  testFunction:
     Type: "AWS::Serverless::Function"
     Properties:
-      Description: "My function"
+      Description: "Test function"
       FunctionName: !Ref "lambdaFunctionName"
       Handler: "handler.handler"
       MemorySize: 128
@@ -57,7 +57,7 @@ Resources:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "lambdaFunction.Arn"
+      FunctionName: !GetAtt "testFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/POST/"
 
@@ -91,4 +91,4 @@ Outputs:
     Value: !Sub "https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/${apiGatewayStageName}"
 
   lambdaArn:
-    Value: !GetAtt "lambdaFunction.Arn"
+    Value: !GetAtt "testFunction.Arn"
