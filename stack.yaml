@@ -19,7 +19,7 @@ Resources:
     Properties:
       Name: "my-api"
       Description: "My API"
-      ApiKeySourceType: "NONE"
+      ApiKeySourceType: "HEADER"
 
   apiGatewayRootMethod:
     Type: "AWS::ApiGateway::Method"
