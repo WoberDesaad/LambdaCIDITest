@@ -95,12 +95,6 @@ Resources:
                   - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${lambdaFunctionName}:*"
           PolicyName: "lambda"
 
-  lambdaLogGroup:
-    Type: "AWS::Logs::LogGroup"
-    Properties:
-      LogGroupName: !Sub "/aws/lambda/${lambdaFunctionName}"
-      RetentionInDays: 90
-
 Outputs:
   apiGatewayInvokeURL:
     Value: !Sub "https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/${apiGatewayStageName}"
