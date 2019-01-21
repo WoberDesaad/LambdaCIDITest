@@ -42,7 +42,7 @@ Resources:
       StageName: !Ref "apiGatewayStageName"
 
   lambdaFunction:
-    Type: "AWS::Lambda::Function"
+    Type: "AWS::Serverless::Function"
     Properties:
       Description: "My function"
       FunctionName: !Ref "lambdaFunctionName"
