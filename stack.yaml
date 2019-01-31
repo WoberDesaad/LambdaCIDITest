@@ -69,7 +69,8 @@ Resources:
     Properties:
       Description: "Triggers every five minutes"
       ScheduleExpression: "rate(5 minutes)"
-      Targets: !GetAtt "producerFunction.Arn"
+      Targets: 
+        - !GetAtt "producerFunction.Arn"
 
   consumerTrigger:
     Type: "AWS::Lambda::EventSourceMapping"
