@@ -48,6 +48,10 @@ Resources:
       Enabled: true
       EventSourceArn: !GetAtt "producerQueue.Arn"
       FunctionName: !GetAtt "consumerFunction.Arn"
+    DependsOn: 
+      "producerQueue"
+      "consumerFunction"
+
 
   lambdaIAMRole:
     Type: "AWS::IAM::Role"
