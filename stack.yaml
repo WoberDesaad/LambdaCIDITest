@@ -3,65 +3,53 @@ Transform: "AWS::Serverless-2016-10-31"
 Description: "My API Gateway and Lambda function"
 
 Parameters:
-  apiGatewayStageName:
-    Type: "String"
-    AllowedPattern: "^[a-z0-9]+$"
-    Default: "call"
-
-  lambdaFunctionName:
-    Type: "String"
-    AllowedPattern: "^[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]+$"
-    Default: "test-function"
 
 Resources:
-  apiGateway:
-    Type: "AWS::ApiGateway::RestApi"
-    Properties:
-      Name: "my-api"
-      Description: "My API"
-      ApiKeySourceType: "HEADER"
-
-  apiGatewayRootMethod:
-    Type: "AWS::ApiGateway::Method"
-    Properties:
-      AuthorizationType: "NONE"
-      HttpMethod: "POST"
-      Integration:
-        IntegrationHttpMethod: "POST"
-        Type: "AWS_PROXY"
-        Uri: !Sub
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "testFunction.Arn"
-      ResourceId: !GetAtt "apiGateway.RootResourceId"
-      RestApiId: !Ref "apiGateway"
-
-  apiGatewayDeployment:
-    Type: "AWS::ApiGateway::Deployment"
-    DependsOn:
-      - "apiGatewayRootMethod"
-    Properties:
-      RestApiId: !Ref "apiGateway"
-      StageName: !Ref "apiGatewayStageName"
-
-  testFunction:
+  producerFunction:
     Type: "AWS::Serverless::Function"
     Properties:
-      Description: "Test function"
-      FunctionName: !Ref "lambdaFunctionName"
-      Handler: "handler.handler"
+      Description: "Producer Function"
+      FunctionName: "producerFunction"
+      Handler: "functions/producer.handler"
       MemorySize: 128
       Role: !GetAtt "lambdaIAMRole.Arn"
       Runtime: "python3.7"
       Timeout: 10
       CodeUri: .
+      Environement:
+        Variables:
+          QUEUE_URL: !GetAtt "producerQueue.Arn"
 
-  lambdaApiGatewayInvoke:
-    Type: "AWS::Lambda::Permission"
+  consumerFunction:
+    Type: "AWS::Severless::Function"
     Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "testFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/POST/"
+      Description: "Consumer Function"
+      FunctionName: "consumerFunction"
+      Handler: "functions/consumer.handler"
+      MemorySize: 128
+      Role: !GetAtt "lambdaIAMRole.Arn"
+      Runtime: "python3.7"
+      Timeout: 10
+      CodeUri: .
+      Environment:
+        Variables:
+          SNS_TOPIC: "arn:aws:sns:us-east-1:820315430153:TestTopic"
+
+  producerQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      ContentBasedDeduplication: false
+      DelaySeconds: 0
+      FifoQueue: false
+      QueueName: "producerQueue"
+
+  producerTrigger:
+    Type: "AWS::Lambda::EventSourceMapping"
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: !GetAtt "producerQueue.Arn"
+      FunctionName: !GetAtt "consumerFunction.Arn"
 
   lambdaIAMRole:
     Type: "AWS::IAM::Role"
@@ -89,8 +77,5 @@ Resources:
           PolicyName: "lambda"
 
 Outputs:
-  apiGatewayInvokeURL:
-    Value: !Sub "https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/${apiGatewayStageName}"
-
   lambdaArn:
     Value: !GetAtt "testFunction.Arn"
