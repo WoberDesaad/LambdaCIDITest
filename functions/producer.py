@@ -6,11 +6,12 @@ import os
 
 def handler(event, context):
     queue_client = boto3.client("sqs")
+    queue = queue_client.get_queue_by_name(QueueNam
     ec2_client = boto3.client("ec2")
 
     # Get information on all instnaces
     response = ec2_client.describe_instances()
 
     # For each instance, write to queue
-    queue_client.send_message(os.environ["QUEUE_URL"], response)
+    queue_client.send_message(QueueUrl=os.environ["QUEUE_URL"], MessageBody=response)
 
