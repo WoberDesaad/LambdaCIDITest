@@ -68,7 +68,7 @@ Resources:
     Type: "AWS::Events::Rule"
     Properties:
       Description: "Triggers every five minutes"
-      ScheduleExpression: "rate(5 minutes)"
+      ScheduleExpression: "rate(60 minutes)"
       Targets: 
         - Arn: !GetAtt "producerFunction.Arn"
           Id: "something_i_dunno"
