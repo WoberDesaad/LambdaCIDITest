@@ -29,7 +29,6 @@ Resources:
   producerQueue:
     Type: "AWS::SQS::Queue"
     Properties:
-      ContentBasedDeduplication: false
       DelaySeconds: 0
       QueueName: "producerQueue"
 
