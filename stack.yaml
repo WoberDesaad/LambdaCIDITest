@@ -90,4 +90,4 @@ Resources:
       FunctionName: !Ref "producerFunction"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
-      SourceArn: !GetAtt "fiveMinuteRule.Arn"
+      SourceArn: !GetAtt "fiveMinuteTimer.Arn"
