@@ -6,7 +6,6 @@ import os
 
 def handler(event, context):
     queue_client = boto3.client("sqs")
-    queue = queue_client.get_queue_by_name(QueueNam
     ec2_client = boto3.client("ec2")
 
     # Get information on all instnaces
