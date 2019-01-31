@@ -50,7 +50,7 @@ Resources:
           QUEUE_URL: !GetAtt "producerQueue.Arn"
 
   consumerFunction:
-    Type: "AWS::Severless::Function"
+    Type: "AWS::Serverless::Function"
     Properties:
       Description: "Consumer Function"
       FunctionName: "consumerFunction"
