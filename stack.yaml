@@ -37,7 +37,7 @@ Resources:
     Properties:
       Description: "Producer Function"
       FunctionName: "producerFunction"
-      Handler: "functions/producer.handler"
+      Handler: "producer.handler"
       MemorySize: 128
       Role: !GetAtt "lambdaIAMRole.Arn"
       Runtime: "python3.7"
@@ -54,7 +54,7 @@ Resources:
     Properties:
       Description: "Consumer Function"
       FunctionName: "consumerFunction"
-      Handler: "functions/consumer.handler"
+      Handler: "consumer.handler"
       MemorySize: 128
       Role: !GetAtt "lambdaIAMRole.Arn"
       Runtime: "python3.7"
