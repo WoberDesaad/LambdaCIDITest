@@ -42,7 +42,7 @@ Resources:
       Role: !GetAtt "lambdaIAMRole.Arn"
       Runtime: "python3.7"
       Timeout: 10
-      CodeUri: .
+      CodeUri: ./functions
       Environment:
         Variables:
           QUEUE_URL: !GetAtt "producerQueue.Arn"
@@ -59,7 +59,7 @@ Resources:
       Role: !GetAtt "lambdaIAMRole.Arn"
       Runtime: "python3.7"
       Timeout: 10
-      CodeUri: .
+      CodeUri: ./functions
       Environment:
         Variables:
           SNS_TOPIC: "arn:aws:sns:us-east-1:820315430153:TestTopic"
