@@ -17,6 +17,9 @@ Resources:
       Environment:
         Variables:
           QUEUE_URL: !GetAtt "producerQueue.Arn"
+      DependsOn:
+        - "producerQueue"
+        - "lambdaIAMRole"
 
   consumerFunction:
     Type: "AWS::Severless::Function"
@@ -32,6 +35,8 @@ Resources:
       Environment:
         Variables:
           SNS_TOPIC: "arn:aws:sns:us-east-1:820315430153:TestTopic"
+      DependsOn:
+        - "lambdaIAMRole"
 
   producerQueue:
     Type: "AWS::SQS::Queue"
