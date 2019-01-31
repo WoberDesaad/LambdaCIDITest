@@ -69,6 +69,9 @@ Resources:
       Enabled: true
       EventSourceArn: !GetAtt "producerQueue.Arn"
       FunctionName: !GetAtt "consumerFunction.Arn"
+      Environment:
+        QUEUE_NAME: !GetAtt "producerQueue.QueueName"
+        ACCOUNT_ID: !Ref "AWS::AccountId"
     DependsOn: 
       - "producerQueue"
       - "consumerFunction"
