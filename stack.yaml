@@ -31,7 +31,6 @@ Resources:
     Properties:
       ContentBasedDeduplication: false
       DelaySeconds: 0
-      FifoQueue: false
       QueueName: "producerQueue"
 
   producerFunction:
