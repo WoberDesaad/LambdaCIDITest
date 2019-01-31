@@ -14,7 +14,7 @@ Resources:
       Runtime: "python3.7"
       Timeout: 10
       CodeUri: .
-      Environement:
+      Environment:
         Variables:
           QUEUE_URL: !GetAtt "producerQueue.Arn"
 
