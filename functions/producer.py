@@ -14,5 +14,5 @@ def handler(event, context):
     response = ec2_client.describe_instances()
 
     # For each instance, write to queue
-    queue_client.send_message(QueueUrl=queue_url, MessageBody=str(response))
+    queue_client.send_message(QueueUrl=queue_url["QueueUrl"], MessageBody=str(response))
 
