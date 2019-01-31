@@ -71,7 +71,8 @@ Resources:
       ScheduleExpression: "rate(5 minutes)"
       Targets: 
         - Arn: !GetAtt "producerFunction.Arn"
-
+          Id: "something_i_dunno"
+  
   consumerTrigger:
     Type: "AWS::Lambda::EventSourceMapping"
     Properties:
