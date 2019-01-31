@@ -20,13 +20,10 @@ Resources:
             Version: "2012-10-17"
             Statement:
               - Action:
-                  - "logs:CreateLogGroup"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
+                  - "*"
                 Effect: "Allow"
                 Resource:
-                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${consumerFunction}:*"
-                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${producerFunction}:*"
+                  - "*"
           PolicyName: "lambdaCan"    
 
   producerQueue:
