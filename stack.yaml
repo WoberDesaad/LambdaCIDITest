@@ -87,11 +87,7 @@ Resources:
   PermissionForEventsToInvokeLambda: 
     Type: "AWS::Lambda::Permission"
     Properties: 
-      FunctionName: 
-        Ref: "producerFunction"
+      FunctionName: !Ref "producerFunction"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
-      SourceArn:
-        - !GetAtt: 
-          - "fiveMinuteRule"
-          - "Arn"
+      SourceArn: !GetAtt "fiveMinuteRule.Arn"
