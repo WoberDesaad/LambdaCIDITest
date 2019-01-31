@@ -84,13 +84,14 @@ Resources:
       - "producerQueue"
       - "consumerFunction"
 
-  producerTrigger:
-    Type: "AWS::Lambda::EventSourceMapping"
-    Properties:
-      Enabled: true
-      EventSourceArn: !GetAtt "fiveMinuteTimer.Arn"
-      FunctionName: !GetAtt "producerFunction.Arn"
-    DependsOn:
-      - "producerFunction"
-      - "fiveMinuteTimer"
-
+  PermissionForEventsToInvokeLambda: 
+    Type: "AWS::Lambda::Permission"
+    Properties: 
+      FunctionName: 
+        Ref: "producerFunction"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        - !GetAtt: 
+          - "fiveMinuteRule"
+          - "Arn"
