@@ -64,7 +64,14 @@ Resources:
         Variables:
           SNS_TOPIC: "arn:aws:sns:us-east-1:820315430153:TestTopic"
 
-  producerTrigger:
+  fiveMinuteTimer:
+    Type: "AWS::Events::Rules"
+    Properties:
+      Description: "Triggers every five minutes"
+      ScheduleExpression: "rate(5 minutes)"
+      Targets: !GetAtt "producerFunction.Arn"
+
+  consumerTrigger:
     Type: "AWS::Lambda::EventSourceMapping"
     Properties:
       BatchSize: 10
