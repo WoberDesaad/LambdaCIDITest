@@ -88,8 +88,8 @@ Resources:
   timer:
     Type: "AWS::Events::Rule"
     Properties:
-      Description: "Triggers every hour"
-      ScheduleExpression: "rate(1 hour)"
+      Description: "Triggers every day"
+      ScheduleExpression: "rate(24 hours)"
       Targets: 
         - Arn: !GetAtt "producerFunction.Arn"
           Id: "something_i_dunno"
