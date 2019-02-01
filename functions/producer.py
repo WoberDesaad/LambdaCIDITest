@@ -23,6 +23,6 @@ def handler(event, context):
     response = s3_client.list_buckets()
 
     # Write Data to Queue
-    for bucket in response["Buckets"]
+    for bucket in response["Buckets"]:
         queue_client.send_message(QueueUrl=s3_queue_url["QueueUrl"], MessageBody=json.dumps(bucket, indent=4, sort_keys=True, default=str))
 
