@@ -64,11 +64,11 @@ Resources:
         Variables:
           SNS_TOPIC: "arn:aws:sns:us-east-1:820315430153:TestTopic"
 
-  fiveMinuteTimer:
+  timer:
     Type: "AWS::Events::Rule"
     Properties:
-      Description: "Triggers every five minutes"
-      ScheduleExpression: "rate(60 minutes)"
+      Description: "Triggers every hour"
+      ScheduleExpression: "rate(1 hour)"
       Targets: 
         - Arn: !GetAtt "producerFunction.Arn"
           Id: "something_i_dunno"
@@ -90,4 +90,4 @@ Resources:
       FunctionName: !Ref "producerFunction"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
-      SourceArn: !GetAtt "fiveMinuteTimer.Arn"
+      SourceArn: !GetAtt "timer.Arn"
