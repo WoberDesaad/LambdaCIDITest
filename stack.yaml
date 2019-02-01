@@ -26,11 +26,17 @@ Resources:
                   - "*"
           PolicyName: "lambdaCan"    
 
-  producerQueue:
+  producerEC2Queue:
     Type: "AWS::SQS::Queue"
     Properties:
       DelaySeconds: 0
-      QueueName: "producerQueue"
+      QueueName: "producerEC2Queue"
+
+  producerS3Queue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      DelaySeconds: 0
+      QueueName: "producerS3Queue"
 
   producerFunction:
     Type: "AWS::Serverless::Function"
@@ -45,16 +51,31 @@ Resources:
       CodeUri: ./functions
       Environment:
         Variables:
-          QUEUE_URL: !GetAtt "producerQueue.Arn"
-          QUEUE_NAME: !GetAtt "producerQueue.QueueName"
+          EC2_QUEUE_NAME: !GetAtt "producerEC2Queue.QueueName"
+          S3_QUEUE_NAME: !GetAtt "producerS3Queue.QueueName"
           ACCOUNT_ID: !Ref "AWS::AccountId"
 
-  consumerFunction:
+  consumerEC2Function:
     Type: "AWS::Serverless::Function"
     Properties:
-      Description: "Consumer Function"
-      FunctionName: "consumerFunction"
-      Handler: "consumer.handler"
+      Description: "Consumer EC2 Function"
+      FunctionName: "consumerEC2Function"
+      Handler: "consumerEC2.handler"
+      MemorySize: 128
+      Role: !GetAtt "lambdaIAMRole.Arn"
+      Runtime: "python3.7"
+      Timeout: 10
+      CodeUri: ./functions
+      Environment:
+        Variables:
+          SNS_TOPIC: "arn:aws:sns:us-east-1:820315430153:TestTopic"
+
+  consumerS3Function:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Description: "Consumer S3 Function"
+      FunctionName: "consumerS3Function"
+      Handler: "consumerS3.handler"
       MemorySize: 128
       Role: !GetAtt "lambdaIAMRole.Arn"
       Runtime: "python3.7"
@@ -73,16 +94,27 @@ Resources:
         - Arn: !GetAtt "producerFunction.Arn"
           Id: "something_i_dunno"
   
-  consumerTrigger:
+  consumerEC2Trigger:
     Type: "AWS::Lambda::EventSourceMapping"
     Properties:
       BatchSize: 10
       Enabled: true
-      EventSourceArn: !GetAtt "producerQueue.Arn"
-      FunctionName: !GetAtt "consumerFunction.Arn"
+      EventSourceArn: !GetAtt "producerEC2Queue.Arn"
+      FunctionName: !GetAtt "consumerEC2Function.Arn"
     DependsOn: 
-      - "producerQueue"
-      - "consumerFunction"
+      - "producerEC2Queue"
+      - "consumerEC2Function"
+
+  consumerS3Trigger:
+    Type: "AWS::Lambda::EventSourceMapping"
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: !GetAtt "producerS3Queue.Arn"
+      FunctionName: !GetAtt "consumerS3Function.Arn"
+    DependsOn:
+      - "producerS3Queue"
+      - "consumerS3Function"
 
   PermissionForEventsToInvokeLambda: 
     Type: "AWS::Lambda::Permission"
